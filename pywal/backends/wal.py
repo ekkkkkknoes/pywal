@@ -57,7 +57,7 @@ def gen_colors(img):
 def adjust(colors, light):
     """Adjust the generated colors and store them in a dict that
        we will later save in json format."""
-    raw_colors = colors[:1] + colors[8:16] + colors[8:-1]
+    raw_colors = colors[:1] + colors[8:15]
 
     # Manually adjust colors.
     if light:
@@ -66,8 +66,8 @@ def adjust(colors, light):
 
         raw_colors[0] = util.lighten_color(colors[-1], 0.85)
         raw_colors[7] = colors[0]
+        raw_colors = raw_colors * 2
         raw_colors[8] = util.darken_color(colors[-1], 0.4)
-        raw_colors[15] = colors[0]
 
     else:
         # Darken the background color slightly.
@@ -75,8 +75,12 @@ def adjust(colors, light):
             raw_colors[0] = util.darken_color(raw_colors[0], 0.40)
 
         raw_colors[7] = util.blend_color(raw_colors[7], "#EEEEEE")
+        raw_colors = raw_colors * 2
         raw_colors[8] = util.darken_color(raw_colors[7], 0.30)
-        raw_colors[15] = util.blend_color(raw_colors[15], "#EEEEEE")
+
+    # Lighten up light colors
+    for i in range(9, 16):
+        raw_colors[i] = util.lighten_color(raw_colors[i], 0.3)
 
     return raw_colors
 
